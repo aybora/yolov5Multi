@@ -41,6 +41,7 @@ class Detect(nn.Module):
         # x = x.copy()  # for profiling
         z = []  # inference output
         self.training |= self.export
+        self.stride = stride                    
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv
             bs, _, ny, nx = x[i].shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
@@ -51,8 +52,8 @@ class Detect(nn.Module):
                     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
 
                 y = x[i].sigmoid()
-                y[..., 0:2] = (y[..., 0:2] * 2. - 0.5 + self.grid[i]) * self.stride[i]  # xy
-                y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]  # wh
+                y[..., 0:2] = (y[..., 0:2] * 2. - 0.5 + self.grid[i].to(x[i].device)) * self.stride.to(x[i].device)  # xy
+                y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i] * self.stride.to(x[i].device)  # wh
                 z.append(y.view(bs, -1, self.no))
 
         return x if self.training else (torch.cat(z, 1), x)
@@ -62,6 +63,48 @@ class Detect(nn.Module):
         yv, xv = torch.meshgrid([torch.arange(ny), torch.arange(nx)])
         return torch.stack((xv, yv), 2).view((1, 1, ny, nx, 2)).float()
 
+class YoloTime(nn.Module):
+    #This defines the structure of the NN.
+    def __init__(self):
+        super(YoloTime, self).__init__()
+        self.conv1 = nn.Conv3d(3, 64, kernel_size=3, padding=1, stride=1)
+        self.conv2 = nn.Conv3d(64, 256, kernel_size=3, padding=1, stride=1)
+        self.conv3 = nn.Conv3d(256, 1, kernel_size=3, padding=1, stride=1)
+        #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
+        
+        self.bn1 = nn.BatchNorm3d(64, momentum=0.03, eps=1e-3)
+        self.bn2 = nn.BatchNorm3d(256, momentum=0.03, eps=1e-3)
+        self.bn3 = nn.BatchNorm3d(1, momentum=0.03, eps=1e-3)
+        
+        #self.conv1 = nn.Conv2d(3072, 1024, kernel_size=3, padding=1, stride=1)
+        #self.conv1 = nn.Conv2d(1024, 42, kernel_size=1, padding=0, stride=1)
+        self.relu = nn.LeakyReLU(0.1)
+        self.num_classes = 0
+        
+        allAnchors = [[10,13, 16,30, 33,23], [30,61, 62,45, 59,119], [116,90, 156,198, 373,326]]
+        allChannels = [256, 512, 1024]
+        allStrides = [8, 16, 32]
+        
+        selectedInd = 0
+        
+        self.stride=torch.tensor([allStrides[selectedInd]])
+        anch=allAnchors[selectedInd]
+        anch=[x/self.stride for x in anch]
+        self.yolo=Detect(nc=1, anchors=([anch]),ch=[allChannels[selectedInd]])
+        
+    def forward(self, x, targets=None):
+        x = self.relu(self.bn1(self.conv1(x)))
+        x = self.relu(self.bn2(self.conv2(x)))
+        x = self.relu(self.bn3(self.conv3(x)))
+        
+        x = x.view(-1,256,64,80)
+        #x = self.conv4(x)
+        #x = self.relu(self.conv2(x))
+        y = []
+        y.append(x)
+        x = self.yolo(y, self.stride)             
+        
+        return x                           
 
 class Model(nn.Module):
     def __init__(self, cfg='yolov5s.yaml', ch=3, nc=None, anchors=None):  # model, input channels, number of classes

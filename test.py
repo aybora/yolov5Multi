@@ -102,7 +102,7 @@ def test(data,
         img = img.half() if half else img.float()  # uint8 to fp16/32
         #img /= 255.0  # 0 - 255 to 0.0 - 1.0
         targets = targets.to(device)
-        nb, _, height, width = img.shape  # batch size, channels, height, width
+        nb, _, _, height, width = img.shape  # batch size, channels, height, width
         height=512
         width=640         
 
@@ -138,7 +138,7 @@ def test(data,
 
             # Predictions
             predn = pred.clone()
-            scale_coords(img[si].shape[1:], predn[:, :4], shapes[si][0], shapes[si][1])  # native-space pred
+            #scale_coords(img[si].shape[1:], predn[:, :4], shapes[si][0], shapes[si][1])  # native-space pred
 
             # Append to text file
             if save_txt:
@@ -181,7 +181,7 @@ def test(data,
 
                 # target boxes
                 tbox = xywh2xyxy(labels[:, 1:5])
-                scale_coords(img[si].shape[1:], tbox, shapes[si][0], shapes[si][1])  # native-space labels
+                #scale_coords(img[si].shape[1:], tbox, shapes[si][0], shapes[si][1])  # native-space labels
                 if plots:
                     confusion_matrix.process_batch(predn, torch.cat((labels[:, 0:1], tbox), 1))
 
@@ -287,7 +287,7 @@ def test(data,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='test.py')
-    parser.add_argument('--weights', nargs='+', type=str, default='runs/train/exp2/weights/best.pt', help='model.pt path(s)')
+    parser.add_argument('--weights', nargs='+', type=str, default='runs/train/exp16/weights/last.pt', help='model.pt path(s)')
     parser.add_argument('--data', type=str, default='data/dataset256.yaml', help='*.data path')
     parser.add_argument('--batch-size', type=int, default=12, help='size of each image batch')
     parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')

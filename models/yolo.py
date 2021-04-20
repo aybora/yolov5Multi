@@ -37,7 +37,7 @@ class Detect(nn.Module):
         self.register_buffer('anchor_grid', a.clone().view(self.nl, 1, -1, 1, 1, 2))  # shape(nl,1,na,1,1,2)
         self.m = nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
 
-    def forward(self, x):
+    def forward(self, x, stride):
         # x = x.copy()  # for profiling
         z = []  # inference output
         self.training |= self.export

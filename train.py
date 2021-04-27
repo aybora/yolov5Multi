@@ -23,7 +23,7 @@ from tqdm import tqdm
 
 import test  # import test.py to get mAP after each epoch
 from models.experimental import attempt_load
-from models.yolo import Model, YoloTime, Detect
+from models.yolo import Model, YoloTime, YoloTime2D, Detect
 from utils.autoanchor import check_anchors
 from utils.datasets_multi import create_dataloader
 from utils.general import labels_to_class_weights, increment_path, labels_to_image_weights, init_seeds, \
@@ -95,7 +95,7 @@ def train(hyp, opt, device, tb_writer=None):
     #     model.load_state_dict(state_dict, strict=False)  # load
     #     logger.info('Transferred %g/%g items from %s' % (len(state_dict), len(model.state_dict()), weights))  # report
     else:
-        model = YoloTime().to(device)  # create
+        model = YoloTime2D().to(device)  # create
     with torch_distributed_zero_first(rank):
         check_dataset(data_dict)  # check
     train_path = data_dict['train']
@@ -119,7 +119,7 @@ def train(hyp, opt, device, tb_writer=None):
     for k, v in model.named_modules():
         if hasattr(v, 'bias') and isinstance(v.bias, nn.Parameter):
             pg2.append(v.bias)  # biases
-        if isinstance(v, nn.BatchNorm3d):
+        if isinstance(v, nn.BatchNorm2d):
             pg0.append(v.weight)  # no decay
         elif hasattr(v, 'weight') and isinstance(v.weight, nn.Parameter):
             pg1.append(v.weight)  # apply decay
@@ -461,10 +461,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', type=str, default='', help='initial weights path')
     parser.add_argument('--cfg', type=str, default='yolov5l.yaml', help='yolov5s.yaml path')
-    parser.add_argument('--data', type=str, default='data/dataset512.yaml', help='data.yaml path')
+    parser.add_argument('--data', type=str, default='data/datasetdemo.yaml', help='data.yaml path')
     parser.add_argument('--hyp', type=str, default='data/hyp.scratch.yaml', help='hyperparameters path')
     parser.add_argument('--epochs', type=int, default=300)
-    parser.add_argument('--batch-size', type=int, default=12, help='total batch size for all GPUs')
+    parser.add_argument('--batch-size', type=int, default=2, help='total batch size for all GPUs')
     parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='[train, test] image sizes')
     parser.add_argument('--rect', action='store_true', help='rectangular training')
     parser.add_argument('--resume', nargs='?', const=True, default=False, help='resume most recent training')

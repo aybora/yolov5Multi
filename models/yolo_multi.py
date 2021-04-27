@@ -104,50 +104,7 @@ class YoloTime(nn.Module):
         y.append(x)
         x = self.yolo(y, self.stride)             
         
-        return x   
-
-class YoloTime2D(nn.Module):
-    #This defines the structure of the NN.
-    def __init__(self):
-        super(YoloTime2D, self).__init__()
-        self.conv1 = nn.Conv2d(768, 1024, kernel_size=3, padding=1, stride=1)
-        self.conv2 = nn.Conv2d(1024, 512, kernel_size=3, padding=1, stride=1)
-        self.conv3 = nn.Conv2d(512, 256, kernel_size=3, padding=1, stride=1)
-        #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
-        
-        self.bn1 = nn.BatchNorm2d(1024, momentum=0.03, eps=1e-3)
-        self.bn2 = nn.BatchNorm2d(512, momentum=0.03, eps=1e-3)
-        self.bn3 = nn.BatchNorm2d(256, momentum=0.03, eps=1e-3)
-        
-        #self.conv1 = nn.Conv2d(3072, 1024, kernel_size=3, padding=1, stride=1)
-        #self.conv1 = nn.Conv2d(1024, 42, kernel_size=1, padding=0, stride=1)
-        self.relu = nn.LeakyReLU(0.1)
-        self.num_classes = 0
-        
-        allAnchors = [[10,13, 16,30, 33,23], [30,61, 62,45, 59,119], [116,90, 156,198, 373,326]]
-        allChannels = [256, 512, 1024]
-        allStrides = [8, 16, 32]
-        
-        selectedInd = 0
-        
-        self.stride=torch.tensor([allStrides[selectedInd]])
-        anch=allAnchors[selectedInd]
-        anch=[x/self.stride for x in anch]
-        self.yolo=Detect(nc=1, anchors=([anch]),ch=[allChannels[selectedInd]])
-        
-    def forward(self, x, targets=None):
-        x = self.relu(self.bn1(self.conv1(x)))
-        x = self.relu(self.bn2(self.conv2(x)))
-        x = self.relu(self.bn3(self.conv3(x)))
-        
-        #x = x.view(-1,256,64,80)
-        #x = self.conv4(x)
-        #x = self.relu(self.conv2(x))
-        y = []
-        y.append(x)
-        x = self.yolo(y, self.stride)             
-        
-        return x                         
+        return x                           
 
 class Model(nn.Module):
     def __init__(self, cfg='yolov5s.yaml', ch=3, nc=None, anchors=None):  # model, input channels, number of classes

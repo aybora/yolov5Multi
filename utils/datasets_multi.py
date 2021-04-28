@@ -437,7 +437,6 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                 # verify images
                 #im = Image.open(im_file)
                 im = np.load(im_file)
-                im = im.transpose(1,2,3,0).reshape(-1,im.shape[2],im.shape[3])
                 shape = (640, 512)#im.shape                                                               
                 #im.verify()  # PIL verify
                 #shape = exif_size(im)  # image size
@@ -579,8 +578,7 @@ def load_image(self, index):
     img = self.imgs[index]
     if img is None:  # not cached
         path = self.img_files[index]
-        img = np.load(path)  
-        img = img.transpose(1,2,3,0).reshape(-1,img.shape[2],img.shape[3])                 
+        img = np.load(path)               
         #img = cv2.imread(path)  # BGR
         assert img is not None, 'Image Not Found ' + path
         h0, w0, l0 = img.shape[0:3]  # orig hw

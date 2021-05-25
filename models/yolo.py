@@ -67,9 +67,9 @@ class YoloTime(nn.Module):
     #This defines the structure of the NN.
     def __init__(self):
         super(YoloTime, self).__init__()
-        self.conv1 = nn.Conv3d(3, 64, kernel_size=3, padding=1, stride=1)
-        self.conv2 = nn.Conv3d(64, 256, kernel_size=3, padding=1, stride=1)
-        self.conv3 = nn.Conv3d(256, 1, kernel_size=3, padding=1, stride=1)
+        self.conv1 = nn.Conv3d(3, 64, kernel_size=(1,3,3), padding=(0,1,1), stride=1)
+        self.conv2 = nn.Conv3d(64, 256, kernel_size=(1,3,3), padding=(0,1,1), stride=1)
+        self.conv3 = nn.Conv3d(256, 1, kernel_size=(1,3,3), padding=(0,1,1), stride=1)
         #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
         
         self.bn1 = nn.BatchNorm3d(64, momentum=0.03, eps=1e-3)

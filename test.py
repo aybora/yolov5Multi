@@ -84,7 +84,7 @@ def test(data,
     # Dataloader
     if not training:
         if device.type != 'cpu':
-            model(torch.zeros(1, 3, 256, 64, 80).to(device).type_as(next(model.parameters())))  # run once
+            model(torch.zeros(1, 256, 64, 240).to(device).type_as(next(model.parameters())))  # run once
         task = opt.task if opt.task in ('train', 'val', 'test') else 'val'  # path to train/val/test images
         dataloader = create_dataloader(data[task], imgsz, batch_size, gs, opt, pad=0, rect=False,
                                        prefix=colorstr(f'{task}: '))[0]
@@ -102,7 +102,7 @@ def test(data,
         img = img.half() if half else img.float()  # uint8 to fp16/32
         #img /= 255.0  # 0 - 255 to 0.0 - 1.0
         targets = targets.to(device)
-        nb, _, _, height, width = img.shape  # batch size, channels, height, width
+        nb, _, height, width = img.shape  # batch size, channels, height, width
         height=512
         width=640         
 

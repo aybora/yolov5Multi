@@ -23,7 +23,7 @@ from tqdm import tqdm
 
 import test  # import test.py to get mAP after each epoch
 from models.experimental import attempt_load
-from models.yolo import Model, YoloTime2D, Detect
+from models.yolo import Model, YoloTime2D_1024, Detect
 from utils.autoanchor import check_anchors
 from utils.datasets_multi import create_dataloader
 from utils.general import labels_to_class_weights, increment_path, labels_to_image_weights, init_seeds, \
@@ -88,7 +88,7 @@ def train(hyp, opt, device, tb_writer=None):
         ckpt = torch.load(weights, map_location=device)  # load checkpoint
     #     if hyp.get('anchors'):
     #         ckpt['model'].yaml['anchors'] = round(hyp['anchors'])  # force autoanchor
-        model = YoloTime2D().to(device)
+        model = YoloTime2D_1024().to(device)
         state_dict = ckpt['model'].float().state_dict()  # to FP32
         model.load_state_dict(state_dict, strict=False)  # load
         logger.info('Transferred %g/%g items from %s' % (len(state_dict), len(model.state_dict()), weights))  # report
@@ -99,7 +99,7 @@ def train(hyp, opt, device, tb_writer=None):
     #     model.load_state_dict(state_dict, strict=False)  # load
     #     logger.info('Transferred %g/%g items from %s' % (len(state_dict), len(model.state_dict()), weights))  # report
     else:
-        model = YoloTime2D().to(device)  # create
+        model = YoloTime2D_1024().to(device)  # create
     with torch_distributed_zero_first(rank):
         check_dataset(data_dict)  # check
     train_path = data_dict['train']

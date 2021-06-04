@@ -9,6 +9,7 @@ Created on Mon Mar 15 16:08:05 2021
 import os,glob
 import numpy as np
 from shutil import copyfile
+from pathlib import Path
 
 for dataset in ["test"]:
 	
@@ -20,6 +21,8 @@ for dataset in ["test"]:
 
 		featureDir = "/media/sst/Disk 2/features/"+ dataset +"/" + str(dataSize)
 		destinationDir = "/media/sst/Disk 3/timesets/" + dataset + "/" + str(dataSize)
+
+		Path(destinationDir).mkdir(parents=True, exist_ok=True)
 
 		for file in sorted(glob.glob(os.path.join(multiFrameDir,'*.txt'))):
 		    _,frameNoStr = os.path.split(file)

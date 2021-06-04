@@ -1,6 +1,6 @@
 # train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
-train: /media/sst/Disk 3/timesets/train/512/images/
-val: /media/sst/Disk 3/timesets/test/512/images/
+train: /media/sst/Disk 1/timesets/train/512/images/
+val: /media/sst/Disk 1/timesets/test/512/images/
 
 # number of classes
 nc: 1

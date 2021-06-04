@@ -84,7 +84,7 @@ def test(data,
     # Dataloader
     if not training:
         if device.type != 'cpu':
-            model(torch.zeros(1, 256, 64, 240).to(device).type_as(next(model.parameters())))  # run once
+            model(torch.zeros(1, 512, 32, 120).to(device).type_as(next(model.parameters())))  # run once
         task = opt.task if opt.task in ('train', 'val', 'test') else 'val'  # path to train/val/test images
         dataloader = create_dataloader(data[task], imgsz, batch_size, gs, opt, pad=0, rect=False,
                                        prefix=colorstr(f'{task}: '))[0]

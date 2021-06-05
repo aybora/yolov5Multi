@@ -84,7 +84,7 @@ def test(data,
     # Dataloader
     if not training:
         if device.type != 'cpu':
-            model(torch.zeros(1, 512, 32, 120).to(device).type_as(next(model.parameters())))  # run once
+            model(torch.zeros(1, 6881280).to(device).type_as(next(model.parameters())))  # run once
         task = opt.task if opt.task in ('train', 'val', 'test') else 'val'  # path to train/val/test images
         dataloader = create_dataloader(data[task], imgsz, batch_size, gs, opt, pad=0, rect=False,
                                        prefix=colorstr(f'{task}: '))[0]
@@ -102,7 +102,7 @@ def test(data,
         img = img.half() if half else img.float()  # uint8 to fp16/32
         #img /= 255.0  # 0 - 255 to 0.0 - 1.0
         targets = targets.to(device)
-        nb, _, height, width = img.shape  # batch size, channels, height, width
+        nb, _ = img.shape  # batch size, channels, height, width
         height=512
         width=640         
 
@@ -287,8 +287,8 @@ def test(data,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='test.py')
-    parser.add_argument('--weights', nargs='+', type=str, default='runs/train/exp16/weights/best.pt', help='model.pt path(s)')
-    parser.add_argument('--data', type=str, default='data/dataset256.yaml', help='*.data path')
+    parser.add_argument('--weights', nargs='+', type=str, default='runs/train/exp34/weights/best.pt', help='model.pt path(s)')
+    parser.add_argument('--data', type=str, default='data/datasetmini.yaml', help='*.data path')
     parser.add_argument('--batch-size', type=int, default=12, help='size of each image batch')
     parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.001, help='object confidence threshold')

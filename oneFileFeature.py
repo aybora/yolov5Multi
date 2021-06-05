@@ -12,7 +12,7 @@ from time import sleep
 from shutil import copyfile
 from pathlib import Path
 
-for dataset in ["train","test"]:  
+for dataset in ["test"]:  
 
     datasetDir = '/media/sst/Disk 1/timesets/'+ dataset
     

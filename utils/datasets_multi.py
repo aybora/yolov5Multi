@@ -581,12 +581,13 @@ def load_image(self, index):
         img = np.load(path)               
         #img = cv2.imread(path)  # BGR
         assert img is not None, 'Image Not Found ' + path
-        h0, w0, l0 = img.shape[0:3]  # orig hw
+        #h0, w0, l0 = img.shape[0:3]  # orig hw
+        h0, w0, l0 = 256,64,240  # orig hw
         #r = self.img_size / max(h0, w0)  # resize image to img_size
         #if r != 1:  # always resize down, only resize up if training with augmentation
         #    interp = cv2.INTER_AREA if r < 1 and not self.augment else cv2.INTER_LINEAR
         #    img = cv2.resize(img, (int(w0 * r), int(h0 * r)), interpolation=interp)
-        return img, (h0, w0, l0), img.shape[0:3]  # img, hwl_original, hwl_resized
+        return img, (h0, w0, l0), (256,64,240)  # img, hwl_original, hwl_resized
     else:
         return self.imgs[index], self.img_hw0[index], self.img_hw[index]  # img, hw_original, hw_resized
 

@@ -110,6 +110,12 @@ class YoloTime2D_256(nn.Module):
     #This defines the structure of the NN.
     def __init__(self):
         super(YoloTime2D_256, self).__init__()
+        # self.conv1 = nn.Conv2d(256, 512, kernel_size=(3,9), padding=(1,4), stride=(1,3))
+        # self.conv2 = nn.Conv2d(512, 256, kernel_size=3, padding=1, stride=1)
+        
+        # self.bn1 = nn.BatchNorm2d(512, momentum=0.03, eps=1e-3)
+        # self.bn2 = nn.BatchNorm2d(256, momentum=0.03, eps=1e-3)
+        
         self.conv1 = nn.Conv2d(256, 512, kernel_size=(3,9), padding=(1,4), stride=1)
         self.conv2 = nn.Conv2d(512, 256, kernel_size=(3,9), padding=(1,4), stride=1)
         self.conv3 = nn.Conv2d(256, 512, kernel_size=(3,9), padding=(1,4), stride=(1,3))
@@ -117,7 +123,7 @@ class YoloTime2D_256(nn.Module):
         self.conv5 = nn.Conv2d(256, 512, kernel_size=3, padding=1, stride=1)
         self.conv6 = nn.Conv2d(512, 256, kernel_size=1, padding=0, stride=1)
 
-        #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
+        # #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
         
         self.bn1 = nn.BatchNorm2d(512, momentum=0.03, eps=1e-3)
         self.bn2 = nn.BatchNorm2d(256, momentum=0.03, eps=1e-3)
@@ -143,6 +149,12 @@ class YoloTime2D_512(nn.Module):
     #This defines the structure of the NN.
     def __init__(self):
         super(YoloTime2D_512, self).__init__()
+        # self.conv1 = nn.Conv2d(512, 1024, kernel_size=(3,9), padding=(1,4), stride=(1,3))
+        # self.conv2 = nn.Conv2d(1024, 512, kernel_size=3, padding=1, stride=1)
+        
+        # self.bn1 = nn.BatchNorm2d(1024, momentum=0.03, eps=1e-3)
+        # self.bn2 = nn.BatchNorm2d(512, momentum=0.03, eps=1e-3)
+        
         self.conv1 = nn.Conv2d(512, 1024, kernel_size=(3,9), padding=(1,4), stride=1)
         self.conv2 = nn.Conv2d(1024, 512, kernel_size=(3,9), padding=(1,4), stride=1)
         self.conv3 = nn.Conv2d(512, 1024, kernel_size=(3,9), padding=(1,4), stride=(1,3))
@@ -150,7 +162,7 @@ class YoloTime2D_512(nn.Module):
         self.conv5 = nn.Conv2d(512, 1024, kernel_size=3, padding=1, stride=1)
         self.conv6 = nn.Conv2d(1024, 512, kernel_size=1, padding=0, stride=1)
 
-        #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
+        # #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
         
         self.bn1 = nn.BatchNorm2d(1024, momentum=0.03, eps=1e-3)
         self.bn2 = nn.BatchNorm2d(512, momentum=0.03, eps=1e-3)
@@ -183,7 +195,7 @@ class YoloTime2D_1024(nn.Module):
         self.conv5 = nn.Conv2d(1024, 2048, kernel_size=3, padding=1, stride=1)
         self.conv6 = nn.Conv2d(2048, 1024, kernel_size=1, padding=0, stride=1)
 
-        #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
+        # #self.conv4 = nn.Conv2d(1024, 18, kernel_size=1, stride=1)
         
         self.bn1 = nn.BatchNorm2d(2048, momentum=0.03, eps=1e-3)
         self.bn2 = nn.BatchNorm2d(1024, momentum=0.03, eps=1e-3)
